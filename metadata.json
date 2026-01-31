@@ -1,0 +1,5 @@
+{
+  "name": "BotanyBot Controller",
+  "description": "A mobile-first control interface for an advanced flower care robot, featuring hydraulic platform control, eccentric rotation, precision watering, and AI-powered soil analysis.",
+  "requestFramePermissions": []
+}
