@@ -245,7 +245,7 @@ export default function App() {
                             <div className="p-2 bg-blue-50 text-blue-500 rounded-lg">
                                 <MoveVertical size={20} />
                             </div>
-                            <h2 className="font-bold text-lg">平台高度</h2>
+                            <h2 className="font-bold text-lg">喜阴植物平台高度</h2>
                         </div>
                         <span className="text-sm font-mono font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full">{robotState.platformHeight} cm</span>
                     </div>

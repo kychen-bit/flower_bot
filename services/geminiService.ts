@@ -2,15 +2,39 @@ import { GoogleGenAI } from "@google/genai";
 import { SoilMetrics } from "../types";
 
 // 外部分析服务适配层（可替换为自建服务）
-const apiKey = process.env.API_KEY || '';
-const ai = new GoogleGenAI({ apiKey });
+const resolveApiKey = () => process.env.GEMINI_API_KEY || process.env.API_KEY || '';
+
+const buildLocalSuggestion = (metrics: SoilMetrics): string => {
+  const notes: string[] = [];
+
+  if (metrics.moisture < 35) notes.push("湿度偏低");
+  if (metrics.moisture > 70) notes.push("湿度偏高");
+  if (metrics.ph < 6.0) notes.push("酸碱度偏酸");
+  if (metrics.ph > 7.5) notes.push("酸碱度偏碱");
+  if (metrics.temperature < 18) notes.push("温度偏低");
+  if (metrics.temperature > 30) notes.push("温度偏高");
+  if (metrics.lightLevel < 500) notes.push("光照偏弱");
+  if (metrics.lightLevel > 5000) notes.push("光照偏强");
+
+  const summary = notes.length ? `状态：${notes.join("，")}。` : "状态：指标在常规范围内。";
+
+  let action = "建议：保持当前设置。";
+  if (metrics.moisture < 35) action = "建议：短时开启浇水并观察回升。";
+  else if (metrics.moisture > 70) action = "建议：暂停浇水，保持通风。";
+  else if (metrics.lightLevel > 5000) action = "建议：适当下调遮光板或旋转避光。";
+  else if (metrics.lightLevel < 500) action = "建议：适当调整平台朝向以增加受光。";
+
+  return `${summary}${action}`;
+};
 
 export const analyzeSoilMetrics = async (metrics: SoilMetrics): Promise<string> => {
+  const apiKey = resolveApiKey();
   if (!apiKey) {
-    return "未配置 API Key，无法进行 AI 土壤分析。";
+    return `未配置 API Key，已返回本地建议。${buildLocalSuggestion(metrics)}`;
   }
 
   try {
+    const ai = new GoogleGenAI({ apiKey });
     const prompt = `
       你是一个嵌入在园艺机器人中的植物学专家 AI。
       请分析以下针对混合花坛（包含喜阴植物如蕨类和喜阳植物如矮牵牛）的土壤传感器数据。
@@ -34,6 +58,6 @@ export const analyzeSoilMetrics = async (metrics: SoilMetrics): Promise<string> 
     return response.text || "分析完成，未生成具体建议。";
   } catch (error) {
     console.error("Analysis failed:", error);
-    return "连接 AI 分析模块失败，请检查网络设置。";
+    return `本地建议。${buildLocalSuggestion(metrics)}`;
   }
 };
