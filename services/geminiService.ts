@@ -1,6 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { SoilMetrics } from "../types";
 
+// 外部分析服务适配层（可替换为自建服务）
 const apiKey = process.env.API_KEY || '';
 const ai = new GoogleGenAI({ apiKey });
 
@@ -32,7 +33,7 @@ export const analyzeSoilMetrics = async (metrics: SoilMetrics): Promise<string> 
 
     return response.text || "分析完成，未生成具体建议。";
   } catch (error) {
-    console.error("Gemini analysis failed:", error);
+    console.error("Analysis failed:", error);
     return "连接 AI 分析模块失败，请检查网络设置。";
   }
 };

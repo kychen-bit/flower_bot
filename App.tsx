@@ -36,6 +36,7 @@ import {
   CartesianGrid
 } from 'recharts';
 
+// 初始值用于界面占位，实际数据来自探针扫描
 const INITIAL_METRICS: SoilMetrics = {
   moisture: 45,
   ph: 6.5,
@@ -44,6 +45,7 @@ const INITIAL_METRICS: SoilMetrics = {
   lightLevel: 800
 };
 
+// 演示用的静态趋势数据（无后端时占位）
 const MOCK_HISTORY = [
   { time: '10:00', moisture: 40 },
   { time: '11:00', moisture: 42 },
@@ -108,7 +110,7 @@ export default function App() {
     }
   };
 
-  const runProbeScan = async () => {
+    const runProbeScan = async () => {
     if (robotState.probeStatus === 'SCANNING') return;
     setRobotState(prev => ({ ...prev, probeStatus: 'SCANNING', aiAnalysis: null }));
 
@@ -120,7 +122,8 @@ export default function App() {
         lastMetrics: newMetrics 
       }));
 
-      const analysis = await analyzeSoilMetrics(newMetrics);
+    // TODO: 可替换为自建分析服务或本地算法
+    const analysis = await analyzeSoilMetrics(newMetrics);
       setRobotState(prev => ({ 
         ...prev, 
         probeStatus: 'DONE',
@@ -401,12 +404,12 @@ export default function App() {
                      </button>
                 </div>
 
-                {/* AI Result */}
+                {/* 分析结果 */}
                 {robotState.aiAnalysis && (
                     <div className="bg-white border-l-4 border-nature-primary rounded-r-xl p-5 shadow-soft">
                         <div className="flex items-center gap-2 mb-3">
                             <Zap size={18} className="text-nature-primary fill-nature-primary" />
-                            <h3 className="font-bold text-nature-text">Gemini AI 建议</h3>
+                            <h3 className="font-bold text-nature-text">分析建议</h3>
                         </div>
                         <p className="text-sm text-slate-600 leading-relaxed">
                             {robotState.aiAnalysis}

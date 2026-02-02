@@ -1,5 +1,6 @@
 import { SoilMetrics, PlantType, ShutterAction } from "../types";
 
+// 当前为本地 mock 实现，用于联调与界面验证
 // 模拟网络延迟
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -49,7 +50,7 @@ export const robotApi = {
   performProbeScan: async (): Promise<SoilMetrics> => {
     console.log(`[Backend] 启动探针检测序列...`);
     await delay(2500); 
-
+    // mock 数据：随机范围用于模拟传感器波动
     return {
       moisture: Math.floor(Math.random() * 40) + 30,
       ph: Number((Math.random() * 2 + 5.5).toFixed(1)),

@@ -1,20 +1,31 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+## 项目说明
 
-# Run and deploy your AI Studio app
+本项目是一个园艺机器人控制面板的前端原型，主要用于课程实验、界面联调与交互流程验证。
 
-This contains everything you need to run your app locally.
+### 当前实现范围
 
-View your app in AI Studio: https://ai.studio/apps/drive/1yfPaqljrkHuvf8anDhPwA1ZL4zV0KlwX
+- 手动控制：平台高度、旋转角度、遮光板动作、分区浇水（界面交互与本地日志）。
+- 监测视图：探针扫描流程、指标卡片、湿度趋势图。
+- 分析建议：调用外部分析服务返回文本建议（未配置 Key 时展示提示文案）。
 
-## Run Locally
+### Mock / Demo 说明
 
-**Prerequisites:**  Node.js
+- `services/robotApi.ts` 为 mock：包含网络延迟、控制日志与随机传感器数据。
+- `MOCK_HISTORY` 为静态趋势数据，占位显示 24h 曲线。
+- 太阳方位目前为固定值 135 度（模拟光照传感器）。
 
+### 本地运行
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+**前置条件：** Node.js
+
+```powershell
+npm install
+npm run dev
+```
+
+启动前请在 `.env.local` 中填入 API Key（键名已在文件内示例）。
+
+### 备注
+
+- 当前未接入真实设备与后端，仅覆盖前端交互与流程。
+- 如需对接真实 API，可从 `services/robotApi.ts` 进行替换。
