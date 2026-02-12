@@ -58,5 +58,17 @@ export const robotApi = {
       temperature: Math.floor(Math.random() * 10) + 18,
       lightLevel: Math.floor(Math.random() * 5000) + 200,
     };
+  },
+
+  // 红外开关
+  setInfraredEnabled: async (enabled: boolean): Promise<void> => {
+    console.log(`[Backend] 红外状态: ${enabled ? '启用' : '禁用'}`);
+    await delay(80);
+  },
+
+  // 发送裁剪指令到手机端（mock）
+  sendTrimRequest: async (): Promise<void> => {
+    console.log(`[Backend] 触发裁剪指令发送到手机端`);
+    await delay(120);
   }
 };

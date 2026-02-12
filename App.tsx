@@ -67,6 +67,7 @@ export default function App() {
     lastMetrics: null,
     aiAnalysis: null,
   });
+    const [infraredEnabled, setInfraredEnabled] = useState(false);
 
   const [activeTab, setActiveTab] = useState<'control' | 'monitor'>('control');
 
@@ -103,6 +104,22 @@ export default function App() {
     });
     await robotApi.controlShutter(action);
   };
+
+    const handleInfraredToggle = async () => {
+        const next = !infraredEnabled;
+        setInfraredEnabled(next);
+        await robotApi.setInfraredEnabled(next);
+    };
+
+    const handleTrimRequest = async () => {
+        if (!infraredEnabled) {
+            alert('红外未启用，无法发送裁剪指令。');
+            return;
+        }
+        // TODO: 接入真实红外高度判断
+        await robotApi.sendTrimRequest();
+        alert('已发送裁剪指令到手机端。');
+    };
 
   const waterPlant = async (type: PlantType) => {
     if (confirm(`确定要为 "${type}" 区域开启精准灌溉吗？`)) {
@@ -375,6 +392,36 @@ export default function App() {
                                 <span className="text-xs text-nature-muted">适合多肉/矮牵牛</span>
                             </div>
                         </button>
+                    </div>
+                </section>
+
+                {/* Infrared Control */}
+                <section className="bg-white rounded-2xl p-5 shadow-soft border border-slate-100">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2.5">
+                            <div className="p-2 bg-slate-50 text-slate-600 rounded-lg">
+                                <Signal size={20} />
+                            </div>
+                            <h2 className="font-bold text-lg">红外遮挡检测</h2>
+                        </div>
+                        <button
+                            onClick={handleInfraredToggle}
+                            className={`text-xs font-bold px-3 py-1.5 rounded-full border transition-colors ${infraredEnabled ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-50 text-slate-500 border-slate-200'}`}
+                        >
+                            {infraredEnabled ? '已启用' : '已禁用'}
+                        </button>
+                    </div>
+                    <p className="text-xs text-nature-muted leading-relaxed">
+                        植物过高遮挡红外时，将向手机端发送裁剪指令。
+                    </p>
+                    <div className="mt-4 flex items-center gap-3">
+                        <button
+                            onClick={handleTrimRequest}
+                            className="bg-slate-50 hover:bg-slate-100 active:bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold text-slate-700 transition-all active:scale-[0.98]"
+                        >
+                            发送裁剪指令
+                        </button>
+                        <span className="text-xs text-slate-400">（mock，未接入真实红外传感）</span>
                     </div>
                 </section>
             </div>

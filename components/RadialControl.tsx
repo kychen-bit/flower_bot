@@ -77,11 +77,11 @@ export const RadialControl: React.FC<RadialControlProps> = ({ value, onChange, l
         
         {/* Degree Ticks */}
         {Array.from({ length: 12 }).map((_, i) => (
-            <div 
-                key={i}
-                className="absolute w-0.5 h-2 bg-slate-300 top-2 left-1/2 -translate-x-1/2 origin-bottom"
-                style={{ transform: `rotate(${i * 30}deg) translateY(4px) translateY(-106px)` }} // Radius approx 106
-            ></div>
+          <div
+            key={i}
+            className="absolute top-1/2 left-1/2 w-0.5 h-2 bg-slate-300"
+            style={{ transform: `translate(-50%, -50%) rotate(${i * 30}deg) translateY(-106px)` }}
+          ></div>
         ))}
 
         {/* Center Information */}
